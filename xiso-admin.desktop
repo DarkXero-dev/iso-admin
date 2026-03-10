@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=XeroISO Admin
+GenericName=VPS Admin Panel
+Comment=XeroLinux ISO — VPS maintenance panel
+Exec=xiso-admin
+Icon=network-server
+Terminal=false
+Type=Application
+Categories=Utility;System;Network;
+Keywords=xero;iso;admin;vps;maintenance;server;codes;
+StartupNotify=true
+StartupWMClass=xiso-admin
