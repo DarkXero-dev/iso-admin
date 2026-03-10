@@ -960,7 +960,7 @@ class XeroAdminWindow(QWidget):
 def main():
     app = QApplication(sys.argv)
     win = XeroAdminWindow()
-    win.adjustSize()
+    win.resize(600, 400)
 
     screen = app.primaryScreen().availableGeometry()
     win.move(
