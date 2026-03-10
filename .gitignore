@@ -6,3 +6,4 @@ push.sh
 *.log
 node_modules/
 .deploy*/
+__pycache__/*
