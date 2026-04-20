@@ -20,11 +20,11 @@ from PyQt6.QtGui import (
 )
 
 # ── Server constants (IP never shown in UI) ────────────────────────────────────
-VPS_HOST     = "172.233.214.202"
-VPS_USER     = "root"
+VPS_HOST     = "192.227.180.87"
+VPS_USER     = "xero"
 VPS          = f"{VPS_USER}@{VPS_HOST}"
-MAINT_SCRIPT = "/Docker/xeroiso/maintenance.sh"
-CODES_FILE   = "/Docker/xeroiso/codez.json"
+MAINT_SCRIPT = "/home/xero/docks/xeroiso/maintenance.sh"
+CODES_FILE   = "/home/xero/docks/xeroiso/codez.json"
 DOCKER_CTR   = "xero-main"
 
 SSH_BASE = ["ssh", "-q",
@@ -35,8 +35,8 @@ SSH_BASE = ["ssh", "-q",
 
 # ── Remote gen script (piped via stdin) ────────────────────────────────────────
 GEN_SCRIPT = r"""#!/bin/bash
-CODES_FILE="/Docker/xeroiso/codez.json"
-LOCAL_EDIT="/Docker/xeroiso/codez.json.edit"
+CODES_FILE="/home/xero/docks/xeroiso/codez.json"
+LOCAL_EDIT="/home/xero/docks/xeroiso/codez.json.edit"
 DOCKER_CONTAINER="xero-main"
 PREFIX="KDE"
 EMAIL="$1"
@@ -716,7 +716,6 @@ class XeroAdminWindow(QWidget):
         self._maint_worker: MaintWorker | None = None
         self._conn_worker:  ConnCheckWorker | None = None
         self._build_ui()
-        self._maint_refresh()
         self._conn_check()
 
     def _build_ui(self):
@@ -742,13 +741,23 @@ class XeroAdminWindow(QWidget):
     def _conn_check(self):
         self.header.set_connected(None)
         self._conn_worker = ConnCheckWorker()
-        self._conn_worker.done.connect(self.header.set_connected)
+        self._conn_worker.done.connect(self._on_conn_result)
         self._conn_worker.start()
+
+    def _on_conn_result(self, connected: bool):
+        self.header.set_connected(connected)
+        if connected:
+            self._maint_refresh()
 
     def _open_connect(self):
         if self.header._connected:
-            # Already connected — just re-ping to refresh status
-            self._conn_check()
+            self.header.set_connected(False)
+            self._maint_status = None
+            self.maint_dot.setStyleSheet("")
+            self.maint_label.setText("Disconnected")
+            self.toggle_btn.setEnabled(False)
+            self.toggle_btn.setText("…")
+            self.maint_msg.setText("")
         else:
             dlg = ConnectDialog(self)
             if dlg.exec() == QDialog.DialogCode.Accepted:

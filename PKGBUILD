@@ -1,7 +1,7 @@
 # Maintainer: TechXero <techxero@xerolinux.xyz>
 
 pkgname=xiso-admin
-pkgver=1.0.1
+pkgver=1.0.2
 pkgrel=1
 pkgdesc="XeroLinux ISO Admin Panel — VPS code generator and maintenance control"
 arch=('any')
